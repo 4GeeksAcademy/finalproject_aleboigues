@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User, Character
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -11,6 +11,7 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 
+import requests
 
 api = Blueprint('api', __name__)
 
@@ -26,6 +27,45 @@ def handle_hello():
     }
 
     return jsonify(response_body), 200
+
+# ruta que nos trae los datos de la API
+@api.route('/apiexterna', methods=['POST'])
+def apiexterna():
+    response = requests.get("https://rickandmortyapi.com/api/character")
+
+    if response.status_code != 200:
+        return jsonify({"error":"fallo con la api externa"}), 500
+    
+    data = response.json()
+    characters = data.get("results",[])
+
+    stored_characters = []
+    errors = []
+    
+    for char in characters:
+        new_character = Character (
+            id = char.get("id"),
+            name = char.get("name"),
+            image = char.get("image"),
+            species = char.get("species"),
+            status = char.get("status"),
+            gender = char.get("gender"),
+        )
+
+        db.session.add(new_character)
+        stored_characters.append(new_character)
+
+    try:
+        db.session.commit()
+    except Exception as e: 
+        db.session.rollback()
+        errors.append(str(e))
+
+    return jsonify ({
+        "stored_characters":[char.serialize() for char in stored_characters],
+        "error": errors 
+    }), 201
+
 
 
 # RUTA DE INICIO DE SESIÓN
