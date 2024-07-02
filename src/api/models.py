@@ -15,7 +15,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            # do not serialize the password, its a security breach
+            
         }
 
 class Favorite(db.Model):
@@ -36,18 +36,26 @@ class Favorite(db.Model):
 
 class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    specie = db.Column(db.String(120), unique=True, nullable=False)
+    name  =  db.Column(db.String(200), unique=False, nullable=False)
+    image  = db.Column(db.String(200), unique=False, nullable=False)
+    species = db.Column(db.String(120), unique=True, nullable=False) 
     status = db.Column(db.String(80), unique=False, nullable=False)
-    is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    gender = db.Column(db.String(80), unique=False, nullable=False)
+    
 
     def __repr__(self):
-        return f'<User {self.email}>'
+        return f'<Character {self.name}>'
 
     def serialize(self):
         return {
             "id": self.id,
+            "name": self.name,
+            "image": self.image,
             "email": self.email,
-            # do not serialize the password, its a security breach
+            "species": self.species,
+            "status": self.species,
+            "gender": self.gender,
+            
         }
 
 
