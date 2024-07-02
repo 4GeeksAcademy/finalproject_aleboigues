@@ -53,7 +53,7 @@ class Character(db.Model):
             "image": self.image,
             "email": self.email,
             "species": self.species,
-            "status": self.species,
+            "status": self.status,
             "gender": self.gender,
             
         }
