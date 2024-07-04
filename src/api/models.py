@@ -15,7 +15,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "email": self.email,
-            
+
         }
 
 class Favorite(db.Model):
@@ -32,16 +32,20 @@ class Favorite(db.Model):
             "user_id": self.user_id,
             "item_id": self.item_id,
         }
-    
+
+
+
+
+
+
 
 class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name  =  db.Column(db.String(200), unique=False, nullable=False)
-    image  = db.Column(db.String(200), unique=False, nullable=False)
-    species = db.Column(db.String(120), unique=True, nullable=False) 
+    name = db.Column(db.String(200), unique=False, nullable=False)
+    image = db.Column(db.String(200), unique=False, nullable=False)
+    species = db.Column(db.String(120), unique=False, nullable=False)
     status = db.Column(db.String(80), unique=False, nullable=False)
     gender = db.Column(db.String(80), unique=False, nullable=False)
-    
 
     def __repr__(self):
         return f'<Character {self.name}>'
@@ -51,12 +55,7 @@ class Character(db.Model):
             "id": self.id,
             "name": self.name,
             "image": self.image,
-            "email": self.email,
             "species": self.species,
             "status": self.status,
             "gender": self.gender,
-            
         }
-
-
-  

@@ -18,52 +18,59 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
-
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
-
-    response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-    }
-
-    return jsonify(response_body), 200
-
-# ruta que nos trae los datos de la API
+# Ruta que nos trae los datos de la API
 @api.route('/apiexterna', methods=['POST'])
 def apiexterna():
-    response = requests.get("https://rickandmortyapi.com/api/character")
-
-    if response.status_code != 200:
-        return jsonify({"error":"fallo con la api externa"}), 500
-    
-    data = response.json()
-    characters = data.get("results",[])
-
+    urls = [
+        "https://rickandmortyapi.com/api/character/?page=1",
+        "https://rickandmortyapi.com/api/character/?page=2",
+        "https://rickandmortyapi.com/api/character/?page=3",
+        "https://rickandmortyapi.com/api/character/?page=4",
+        "https://rickandmortyapi.com/api/character/?page=5",
+        "https://rickandmortyapi.com/api/character/?page=6",
+    ]
     stored_characters = []
     errors = []
-    
-    for char in characters:
-        new_character = Character (
-            id = char.get("id"),
-            name = char.get("name"),
-            image = char.get("image"),
-            species = char.get("species"),
-            status = char.get("status"),
-            gender = char.get("gender"),
-        )
 
-        db.session.add(new_character)
-        stored_characters.append(new_character)
+    for url in urls:
+        response = requests.get(url)
+
+        if response.status_code != 200:
+            return jsonify({"error": "fallo con la api externa"}), 500
+
+        data = response.json()
+        characters = data.get("results", [])
+
+        for char in characters:
+            existing_character = Character.query.filter_by(name=char.get("name")).first()
+            if existing_character:
+                continue
+
+            new_character = Character(
+                id=char.get("id"),
+                name=char.get("name"),
+                image=char.get("image"),
+                species=char.get("species"),
+                status=char.get("status"),
+                gender=char.get("gender"),
+            )
+
+            try:
+                db.session.add(new_character)
+                stored_characters.append(new_character)
+            except Exception as e:
+                db.session.rollback()
+                errors.append(str(e))
 
     try:
         db.session.commit()
-    except Exception as e: 
+    except Exception as e:
         db.session.rollback()
         errors.append(str(e))
 
-    return jsonify ({
-        "stored_characters":[char.serialize() for char in stored_characters],
-        "error": errors 
+    return jsonify({
+        "stored_characters": [char.serialize() for char in stored_characters],
+        "errors": errors
     }), 201
 
 
