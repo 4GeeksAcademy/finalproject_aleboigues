@@ -74,6 +74,19 @@ def apiexterna():
     }), 201
 
 
+#Ruta para traer personajes del backend (GET)
+
+
+@api.route('/characters', methods=['GET'])
+def get_characters():
+    try:
+        characters = Character.query.all()
+        return jsonify([char.serialize() for char in characters]), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
 
 # RUTA DE INICIO DE SESIÓN
 
