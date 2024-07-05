@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Character
+from api.models import db, User, Character, Favorite
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 
@@ -103,20 +103,37 @@ def get_favorites(user_id):
     favorites = Favorite.query.filter_by(user_id=user_id).all()
     return jsonify([{'id': fav.id, 'item_id': fav.item_id, 'item_type': fav.item_type} for fav in favorites])
 
-@api.route('/favorites', methods=['POST'])
+@api.route('/addfavorite', methods=['POST'])
 def add_favorite():
-    data = request.json
-    new_favorite = Favorite(user_id=data['user_id'], item_id=data['item_id'], item_type=data['item_type'])
-    db.session.add(new_favorite)
-    db.session.commit()
-    return jsonify({'message': 'Favorite added successfully'})
+    user_id = request.json.get("user_id")
+    character_id = request.json.get("character_id")
+
+    if not user_id or not character_id:
+       return jsonify({"message" : "Usuario o personaje no enconntrado"}), 400
+
+    user = User.query.get(user_id)
+    character = Character.query.get(character_id)
+
+    if not user or not character:
+        return jsonify({"message": "usuario o personaje no encontrado"}), 404
+    
+    new_favorite = Favorite(user_id = user_id, item_id = character_id)
+
+    try:
+        db.session.add(new_favorite)
+        db.session.commit()
+        return jsonify({"message":"favorito sañadido correctamente"}), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": f"ocurrió un error:{e}"}), 500
+
 
 @api.route('/favorites/<int:id>', methods=['DELETE'])
 def delete_favorite(id):
     favorite = Favorite.query.get(id)
     db.session.delete(favorite)
     db.session.commit()
-    return jsonify({'message': 'Favorite deleted successfully'})
+    return jsonify({'message': 'Favorito eliminado'})
 
 if __name__ == '__main__':
     app.run(debug=True)

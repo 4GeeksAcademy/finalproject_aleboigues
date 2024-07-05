@@ -35,6 +35,7 @@ const Characters = () => {
                         <p className="card-text">Especie: {character.species}</p>
                         <p className="card-text">Estado: {character.status}</p>
                         <p className="card-text">Género: {character.gender}</p>
+                        <button className="btn btn-success">Añadir a Favoritos</button>
                      </div>
                   </div>
                </div>
