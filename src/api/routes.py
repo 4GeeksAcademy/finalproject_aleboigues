@@ -92,11 +92,17 @@ def get_characters():
 
 @api.route('/login', methods=['POST'])
 def login():
-    data = request.json
-    user = User.query.filter_by(email=data['email'], password=data['password']).first()
-    if user:
-        return jsonify({'message': 'Login successful', 'user': {'id': user.id, 'username': user.username}})
-    return jsonify({'message': 'Invalid credentials'}), 401
+    email = request.json.get("email",None)
+    password = request.json.get("password", None)
+    user = User.query.filter_by(email = email).first()
+    if user is None :
+        return jsonify({'message': "email incorrecto"}), 401
+    if password != user.password:
+        return jsonify({'message': "contraseña incorrecta"}), 401
+    access_token = create_access_token(identity=email)
+    return jsonify(access_token=access_token)
+
+
 
 @api.route('/favorites/<int:user_id>', methods=['GET'])
 def get_favorites(user_id):
