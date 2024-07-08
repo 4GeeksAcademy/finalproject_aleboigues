@@ -75,8 +75,6 @@ def apiexterna():
 
 
 #Ruta para traer personajes del backend (GET)
-
-
 @api.route('/characters', methods=['GET'])
 def get_characters():
     try:
@@ -86,10 +84,7 @@ def get_characters():
         return jsonify({"error": str(e)}), 500
 
 
-
-
 # RUTA DE INICIO DE SESIÓN
-
 @api.route('/login', methods=['POST'])
 def login():
     email = request.json.get("email",None)
@@ -102,6 +97,19 @@ def login():
     access_token = create_access_token(identity=email)
     return jsonify(access_token=access_token)
 
+
+# RUTA DE REGISTRO
+@api.route('/signup', methods=['POST'])
+def signup():
+    body = request.get_json()
+    user = User.query.filter_by(email = body["email"]).first()
+    if user is None: 
+        user = User (email=body["email"],password=body["password"], is_active = True)
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({'message': "ususario creado"}), 200
+    else:
+         return jsonify({'message': "ususario ya existe"}), 401
 
 
 @api.route('/favorites/<int:user_id>', methods=['GET'])
