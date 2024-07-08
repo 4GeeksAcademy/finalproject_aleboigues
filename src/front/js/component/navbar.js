@@ -10,8 +10,8 @@ export const Navbar = () => {
 					<img src={logo} width="100" alt="Rick and Morty Logo" />
 				</Link>
 				<div className="ml-auto">
-					<Link to="/demo">
-						<button className="btn btn-primary"></button>
+					<Link to="/signup">
+						<button className="btn btn-primary">Sign Up</button>
 					</Link>
 				</div>
 			</div>
