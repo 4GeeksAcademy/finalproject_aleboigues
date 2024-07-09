@@ -26,6 +26,7 @@ const Login = () => {
       
       if (response.ok) {
         alert("Inicio de sesión exitoso");
+        localStorage.setItem("token",responseData.access_token);
       } else {
         alert("Correo o contraseña incorrectos");
       }
