@@ -3,6 +3,12 @@ import { Link } from "react-router-dom";
 import logo from "../../img/rick-and-morty-31015.png"; 
 import "/workspaces/finalproject_aleboigues/src/front/styles/styles.css"
 export const Navbar = () => {
+
+	function logout(){
+		localStorage.removeItem("token");
+		alert ("has cerrado sesión exitosamente")
+	};
+
 	return (
 		<nav className="navbar navbar-expand custom-navbar-bg">
 			<div className="container">
@@ -15,6 +21,9 @@ export const Navbar = () => {
 					</Link>
 					<Link to="/login">
 						<button className="btn btn-primary">Log In</button>
+					</Link>
+					<Link to="/login">
+						<button onClick={()=>logout()} className="btn btn-primary">Log Out</button>
 					</Link>
 				</div>
 			</div>
