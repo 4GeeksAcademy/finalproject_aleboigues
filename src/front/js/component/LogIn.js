@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate ();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -27,6 +30,7 @@ const Login = () => {
       if (response.ok) {
         alert("Inicio de sesión exitoso");
         localStorage.setItem("token",responseData.access_token);
+        navigate("/character")
       } else {
         alert("Correo o contraseña incorrectos");
       }

@@ -13,6 +13,7 @@ import { Footer } from "./component/footer";
 import Signup from "./component/SignUp";
 import Login from "./component/LogIn";
 import MainPage from "./component/MainPage";
+import Characters from "./pages/Characters";
 
 //create your first component
 const Layout = () => {
@@ -34,6 +35,7 @@ const Layout = () => {
                         <Route element={<h1>Not found!</h1>} />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Login />} path="/login" />
+                        <Route element={<Characters />} path="/character" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>
