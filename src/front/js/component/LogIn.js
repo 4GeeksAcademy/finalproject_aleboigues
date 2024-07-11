@@ -4,8 +4,18 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [isAutenticated, setIsAutenthicated] = useState(false);
   const navigate = useNavigate ();
+
+  useEffect (() => {
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAutenthicated (true);
+      navigate("/character")
+    }
+
+  }, [navigate])
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -30,6 +40,7 @@ const Login = () => {
       if (response.ok) {
         alert("Inicio de sesión exitoso");
         localStorage.setItem("token",responseData.access_token);
+        setIsAutenthicated (true)
         navigate("/character")
       } else {
         alert("Correo o contraseña incorrectos");
