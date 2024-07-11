@@ -14,7 +14,8 @@ import Signup from "./component/SignUp";
 import Login from "./component/LogIn";
 import MainPage from "./component/MainPage";
 import Characters from "./pages/Characters";
-import RutaProtegida from "./component/RutaProtegida";
+import ProtectedRoute from "./component/ProtectedRoute";
+
 
 //create your first component
 const Layout = () => {
@@ -37,7 +38,14 @@ const Layout = () => {
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Characters />} path="/character" />
-                        <Route element={<RutaProtegida />} path="/rutaprotegida" />
+                        <Route
+                            element={
+                                <ProtectedRoute >
+                                    <Characters />
+                                </ProtectedRoute>
+                            }
+                         
+                            />
                     </Routes>
                     <Footer />
                 </ScrollToTop>

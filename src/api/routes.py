@@ -76,6 +76,7 @@ def apiexterna():
 
 #Ruta para traer personajes del backend (GET)
 @api.route('/characters', methods=['GET'])
+
 def get_characters():
     try:
         characters = Character.query.all()
