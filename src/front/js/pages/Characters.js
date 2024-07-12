@@ -18,7 +18,7 @@ const Characters = () => {
 
     // Función para llamar a la API externa
     async function ejecutarApiExterna() {
-        const response = await fetch("https://improved-space-meme-qpxxp9766r9c44qp-3001.app.github.dev/api/apiexterna", { 
+        const response = await fetch(process.env.BACKEND_URL + "/api/apiexterna", { 
             method: "POST", 
             headers: { "Content-Type": "application/json" } 
         });
@@ -28,7 +28,7 @@ const Characters = () => {
 
     // Función para traer los personajes
     async function traerPersonajes() {
-        const response = await fetch("https://improved-space-meme-qpxxp9766r9c44qp-3001.app.github.dev/api/characters", { 
+        const response = await fetch(process.env.BACKEND_URL + "/api/characters", { 
             method: "GET" 
         });
         const data = await response.json();

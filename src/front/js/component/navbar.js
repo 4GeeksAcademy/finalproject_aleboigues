@@ -26,10 +26,10 @@ export const Navbar = () => {
                     {!isAuthenticated ? (
                         <>
                             <Link to="/signup">
-                                <button className="btn btn-primary">Sign Up</button>
+                                <button className="btn btn-primary m-2">Sign Up</button>
                             </Link>
                             <Link to="/login">
-                                <button className="btn btn-primary">Log In</button>
+                                <button className="btn btn-primary  m-2">Log In</button>
                             </Link>
                         </>
                     ) : (

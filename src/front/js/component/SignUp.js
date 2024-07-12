@@ -15,7 +15,7 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const dataToSend = { email, password };
-        const response = await fetch("https://improved-space-meme-qpxxp9766r9c44qp-3001.app.github.dev/api/signup", {
+        const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
             method:"POST",
             headers:{"Content-Type":"application/json"}, 
             body: JSON.stringify(dataToSend),
