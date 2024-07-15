@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "/workspaces/finalproject_aleboigues/src/front/styles/login.css"; // Ensure you have the CSS file
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isAutenticated, setIsAutenthicated] = useState(false);
-  const navigate = useNavigate ();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
 
-  useEffect (() => {
-
+  useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      setIsAutenthicated (true);
-      navigate("/character")
+      setIsAuthenticated(true);
+      navigate("/character");
     }
-
-  }, [navigate])
+  }, [navigate]);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -28,7 +27,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const dataToSend = { email, password };
-    
+
     try {
       const response = await fetch(process.env.BACKEND_URL + "/api/login", {
         method: "POST",
@@ -36,12 +35,12 @@ const Login = () => {
         body: JSON.stringify(dataToSend),
       });
       const responseData = await response.json();
-      
+
       if (response.ok) {
         alert("Inicio de sesión exitoso");
-        localStorage.setItem("token",responseData.access_token);
-        setIsAutenthicated (true)
-        navigate("/character")
+        localStorage.setItem("token", responseData.access_token);
+        setIsAuthenticated(true);
+        navigate("/character");
       } else {
         alert("Correo o contraseña incorrectos");
       }
@@ -52,51 +51,33 @@ const Login = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card">
-            <div className="card-body">
-              <h2 className="card-title text-center mb-3 display-5">
-                Iniciar sesión
-              </h2>
-              <form onSubmit={handleSubmit}>
-                <div className="form-group mt-3 h6">
-                  <label htmlFor="email" className="mb-1">
-                    Correo electrónico:
-                  </label>
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    value={email}
-                    onChange={handleEmailChange}
-                    required
-                  />
-                </div>
-                <div className="form-group mt-3 h6">
-                  <label htmlFor="password" className="mb-1">
-                    Contraseña:
-                  </label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    value={password}
-                    onChange={handlePasswordChange}
-                    required
-                  />
-                </div>
-                <div className="text-center">
-                  <button type="submit" className="btn btn-primary mt-5">
-                    Iniciar sesión
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+    <div className="login-box">
+      <h2>Iniciar sesión</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="user-box">
+          <input
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+            required
+          />
+          <label>Correo electrónico</label>
         </div>
-      </div>
+        <div className="user-box">
+          <input
+            type="password"
+            value={password}
+            onChange={handlePasswordChange}
+            required
+          />
+          <label>Contraseña</label>
+        </div>
+        <center>
+          <a href="#" onClick={handleSubmit}>
+            Iniciar sesión
+          </a>
+        </center>
+      </form>
     </div>
   );
 };

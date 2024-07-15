@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "/workspaces/finalproject_aleboigues/src/front/styles/login.css"; // Use the same CSS file
 
 const Signup = () => {
     const [email, setEmail] = useState("");
@@ -15,65 +16,53 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const dataToSend = { email, password };
-        const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
-            method:"POST",
-            headers:{"Content-Type":"application/json"}, 
-            body: JSON.stringify(dataToSend),
-        });
-        const responseData = await response.json();
-        if (response.ok) {
-            alert("usuario creado correctamente");
-        } else {
-            alert("usuario ya existente")
+        try {
+            const response = await fetch(process.env.BACKEND_URL + "/api/signup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dataToSend),
+            });
+            const responseData = await response.json();
+            if (response.ok) {
+                alert("Usuario creado correctamente");
+            } else {
+                alert("Usuario ya existente");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error en el servidor. Inténtalo de nuevo más tarde.");
         }
     };
 
     return (
-        <div className="container mt-5">
-            <div className="row justify-content-center">
-                <div className="col-md-6">
-                    <div className="card">
-                        <div className="card-body">
-                            <h2 className="card-title text-center mb-3 display-5">
-                                Registro
-                            </h2>
-                            <form onSubmit={handleSubmit}>
-                                <div className="form-group mt-3 h6">
-                                    <label htmlFor="email" className="mb-1">
-                                        Correo electrónico:
-                                    </label>
-                                    <input
-                                        type="email"
-                                        className="form-control"
-                                        id="email"
-                                        value={email}
-                                        onChange={handleEmailChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group mt-3 h6">
-                                    <label htmlFor="password" className="mb-1">
-                                        Contraseña:
-                                    </label>
-                                    <input
-                                        type="password"
-                                        className="form-control"
-                                        id="password"
-                                        value={password}
-                                        onChange={handlePasswordChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="text-center">
-                                    <button type="submit" className="btn btn-primary mt-5">
-                                        Registrarse
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+        <div className="login-box">
+            <h2>Registro</h2>
+            <form onSubmit={handleSubmit}>
+                <div className="user-box">
+                    <input
+                        type="email"
+                        value={email}
+                        onChange={handleEmailChange}
+                        required
+                    />
+                    <label>Correo electrónico</label>
                 </div>
-            </div>
+                <div className="user-box">
+                    <input
+                        type="password"
+                        value={password}
+                        onChange={handlePasswordChange}
+                        required
+                    />
+                    <label>Contraseña</label>
+                </div>
+                <center>
+                    <a href="#" onClick={handleSubmit}>
+                        Registrarse
+                        <span></span>
+                    </a>
+                </center>
+            </form>
         </div>
     );
 };
