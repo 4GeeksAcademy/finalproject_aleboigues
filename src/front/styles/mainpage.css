@@ -1,0 +1,21 @@
+
+.main-page {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.video-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.text-white {
+    color: #ffffff; /* Color del texto */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Sombra de texto para mejorar la legibilidad */
+}
+
