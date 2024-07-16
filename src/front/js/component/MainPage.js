@@ -1,11 +1,11 @@
 import React from "react";
-import "/workspaces/finalproject_aleboigues/src/front/styles/mainpage.css"; // Importa tu archivo CSS aquí
+import "/workspaces/finalproject_aleboigues/src/front/styles/mainpage.css"; 
 
 const MainPage = () => {
     return (
         <div className="main-page">
             <video autoPlay loop muted className="video-bg">
-                <source src="tu_video.mp4" type="video/mp4" />
+                <source src="/workspaces/finalproject_aleboigues/public/videos/Vortex_.mp4" type="video/mp4" />
                 Tu navegador no soporta videos HTML5.
             </video>
 
@@ -19,11 +19,11 @@ const MainPage = () => {
                         <p className="mt-4">
                             Por favor, regístrate o inicia sesión para acceder a la lista completa de personajes y descubrir más sobre sus aventuras interdimensionales.
                         </p>
-                       {/*   <div className="mt-5">
+                        {/*  <div className="mt-5">
                             <img
-                                src="https://via.placeholder.com/600x300"
+                                src='}
                                 alt="Rick and Morty Banner"
-                                className="img-fluid rounded shadow-sm"
+                                className="img-fluid"
                             />
                         </div>*/}
                     </div>

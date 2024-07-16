@@ -32,12 +32,14 @@ const Layout = () => {
                     <Navbar />
                     <Routes>
                         <Route element={<MainPage />} path="/" />
+                        <Route element={<videos />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Characters />} path="/character" />
+
                         <Route
                             element={
                                 <ProtectedRoute >
