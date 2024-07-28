@@ -1,0 +1,26 @@
+[33m9954db8[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m mp4 bg
+[33mc59cf90[m front main page
+[33m4a4d2c7[m front login/singup
+[33m8e1c6d4[m últimos retoques
+[33m49b996f[m renderizado condicional botones SignUp, LOgIn, LogOut
+[33mcb48b9c[m ProtecteRoute para Character Hecho
+[33m1f2e70d[m localstorage
+[33m113a100[m RutaProtegida creada
+[33m6b4285a[m ruta mainpage -> character
+[33m338a526[m MainPage
+[33mbc8cfdc[m botob logout
+[33mb71d3e2[m token almacenado
+[33m4194f29[m LogIn
+[33m618bc25[m Ruta SignUp
+[33m88a8e04[m ruta signup  creada
+[33m0e59631[m codigo login actualizado
+[33m5912212[m ruta añadir favoritos
+[33m520650e[m frontend characters
+[33m5a5404a[m fetch y characters traídos al front
+[33m190de3b[m ruta que almacena información de la API en nuestro back
+[33m94432df[m método POST
+[33me21d6bf[m modelado personajes
+[33mce05428[m modelado personajes
+[33m7e92572[m character
+[33m900d9f2[m Favorite
+[33m8329df0[m Initial commit
