@@ -131,6 +131,7 @@ def get_character(id):
         return jsonify({"error": "Personaje no encontrado"}), 404
 
 
+
 # Ruta para actualizar un personaje (PUT)
 @api.route('/characters/<int:id>', methods=['PUT'])
 def update_character(id):
