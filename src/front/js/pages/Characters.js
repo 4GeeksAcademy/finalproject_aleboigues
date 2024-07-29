@@ -1,11 +1,14 @@
+// src/front/js/pages/Characters.js
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "../component/SearchBar"; // Asegúrate de importar tu componente SearchBar
 
 const Characters = () => {
     const [characters, setCharacters] = useState([]);
+    const [searchQuery, setSearchQuery] = useState(""); // Estado para manejar la búsqueda
     const navigate = useNavigate();
 
-    // Verifica la autenticación del usuario
     useEffect(() => {
         const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         if (!token) {
@@ -16,7 +19,6 @@ const Characters = () => {
         }
     }, [navigate]);
 
-    // Función para llamar a la API externa
     async function ejecutarApiExterna() {
         const response = await fetch(process.env.BACKEND_URL + "/api/apiexterna", { 
             method: "POST", 
@@ -26,7 +28,6 @@ const Characters = () => {
         // Manejar la respuesta si es necesario
     };
 
-    // Función para traer los personajes
     async function traerPersonajes() {
         const response = await fetch(process.env.BACKEND_URL + "/api/characters", { 
             method: "GET" 
@@ -35,11 +36,20 @@ const Characters = () => {
         setCharacters(data);
     };
 
+    const filteredCharacters = characters.filter(character => 
+        character.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+    };
+
     return (
         <div className="container">
             <h1 className="text-center my-4">Personajes de Rick and Morty</h1>
+            <SearchBar onSearch={handleSearch} /> {/* Aquí pasamos la función de búsqueda */}
             <div className="row">
-                {characters.map((character, index) => (
+                {filteredCharacters.map((character, index) => (
                     <div key={index} className="col-lg-4 col-md-6 mb-4">
                         <div className="card h-100">
                             <img src={character.image} className="card-img-top" alt={character.name} />

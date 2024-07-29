@@ -1,28 +1,24 @@
-import React, { useState } from 'react';
-import "/workspaces/finalproject_aleboigues/src/front/styles/searchbar.css";
+
+import React, { useState } from "react";
 
 const SearchBar = ({ onSearch }) => {
-    const [query, setQuery] = useState('');
+    const [query, setQuery] = useState("");
 
-    const handleInputChange = (event) => {
-        setQuery(event.target.value);
-    };
-
-    const handleSearch = () => {
+    const handleSearch = (event) => {
+        event.preventDefault();
         onSearch(query);
     };
 
     return (
-        <div className="search-bar">
-            <input
-                type="text"
-                value={query}
-                onChange={handleInputChange}
-                placeholder="Search..."
-                className="search-input"
+        <form onSubmit={handleSearch}>
+            <input 
+                type="text" 
+                placeholder="Buscar personaje..." 
+                value={query} 
+                onChange={(e) => setQuery(e.target.value)} 
             />
-            <button onClick={handleSearch} className="search-button">Search</button>
-        </div>
+            <button type="submit">Buscar</button>
+        </form>
     );
 };
 

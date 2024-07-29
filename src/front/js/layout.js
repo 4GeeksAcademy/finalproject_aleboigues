@@ -1,3 +1,5 @@
+// src/front/js/layout.js
+
 import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
@@ -15,7 +17,7 @@ import Login from "./component/LogIn";
 import MainPage from "./component/MainPage";
 import Characters from "./pages/Characters";
 import ProtectedRoute from "./component/ProtectedRoute";
-import SearchBar from "./component/SearchBar"; // Importar SearchBar
+import SearchBar from "./component/SearchBar";
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -23,8 +25,6 @@ const Layout = () => {
 
     const handleSearch = (query) => {
         setSearchQuery(query);
-        console.log('Search query:', query);
-        // Aquí puedes manejar la lógica de búsqueda, por ejemplo, actualizar el estado o realizar una llamada a la API.
     };
 
     if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
@@ -34,7 +34,7 @@ const Layout = () => {
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
                     <Navbar />
-                    <SearchBar onSearch={handleSearch} /> {/* Agregar la barra de búsqueda */}
+                    <SearchBar onSearch={handleSearch} />
                     <Routes>
                         <Route element={<MainPage />} path="/" />
                         <Route element={<Demo />} path="/demo" />
@@ -42,11 +42,11 @@ const Layout = () => {
                         <Route element={<h1>Not found!</h1>} />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Login />} path="/login" />
-                        <Route element={<Characters />} path="/character" />
+                        <Route element={<Characters searchQuery={searchQuery} />} path="/character" />
                         <Route
                             element={
                                 <ProtectedRoute>
-                                    <Characters />
+                                    <Characters searchQuery={searchQuery} />
                                 </ProtectedRoute>
                             }
                             path="/protected"
