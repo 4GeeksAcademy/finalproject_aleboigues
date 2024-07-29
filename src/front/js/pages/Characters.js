@@ -1,44 +1,19 @@
-// src/front/js/pages/Characters.js
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "../component/SearchBar"; // Asegúrate de importar tu componente SearchBar
+import SearchBar from "../component/SearchBar"; 
+import CharacterManager from "../component/characterManager"; // Importamos el nuevo componente
 
 const Characters = () => {
-    const [characters, setCharacters] = useState([]);
-    const [searchQuery, setSearchQuery] = useState(""); // Estado para manejar la búsqueda
+    const [filteredCharacters, setFilteredCharacters] = useState([]);
+    const [searchQuery, setSearchQuery] = useState(""); 
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         if (!token) {
             navigate('/home');
-        } else {
-            ejecutarApiExterna();
-            traerPersonajes();
         }
     }, [navigate]);
-
-    async function ejecutarApiExterna() {
-        const response = await fetch(process.env.BACKEND_URL + "/api/apiexterna", { 
-            method: "POST", 
-            headers: { "Content-Type": "application/json" } 
-        });
-        const data = await response.json();
-        // Manejar la respuesta si es necesario
-    };
-
-    async function traerPersonajes() {
-        const response = await fetch(process.env.BACKEND_URL + "/api/characters", { 
-            method: "GET" 
-        });
-        const data = await response.json();
-        setCharacters(data);
-    };
-
-    const filteredCharacters = characters.filter(character => 
-        character.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
 
     const handleSearch = (query) => {
         setSearchQuery(query);
@@ -47,7 +22,13 @@ const Characters = () => {
     return (
         <div className="container">
             <h1 className="text-center my-4">Personajes de Rick and Morty</h1>
-            <SearchBar onSearch={handleSearch} /> {/* Aquí pasamos la función de búsqueda */}
+            <SearchBar onSearch={handleSearch} />
+            <CharacterManager onCharacterUpdate={(characters) => {
+                const filtered = characters.filter(character =>
+                    character.name.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+                setFilteredCharacters(filtered);
+            }} />
             <div className="row">
                 {filteredCharacters.map((character, index) => (
                     <div key={index} className="col-lg-4 col-md-6 mb-4">

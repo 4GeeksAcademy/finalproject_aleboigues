@@ -74,9 +74,8 @@ def apiexterna():
     }), 201
 
 
-#Ruta para traer personajes del backend (GET)
+# Ruta para obtener todos los personajes (GET)
 @api.route('/characters', methods=['GET'])
-
 def get_characters():
     try:
         characters = Character.query.all()
@@ -85,13 +84,82 @@ def get_characters():
         return jsonify({"error": str(e)}), 500
 
 
+# Ruta para crear un nuevo personaje (POST)
+@api.route('/characters', methods=['POST'])
+def create_character():
+    data = request.get_json()
+    new_character = Character(
+        name=data.get("name"),
+        image=data.get("image"),
+        species=data.get("species"),
+        status=data.get("status"),
+        gender=data.get("gender"),
+    )
+
+    try:
+        db.session.add(new_character)
+        db.session.commit()
+        return jsonify(new_character.serialize()), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+# Ruta para obtener un personaje por ID (GET)
+@api.route('/characters/<int:id>', methods=['GET'])
+def get_character(id):
+    character = Character.query.get(id)
+    if character:
+        return jsonify(character.serialize()), 200
+    else:
+        return jsonify({"error": "Personaje no encontrado"}), 404
+
+
+# Ruta para actualizar un personaje (PUT)
+@api.route('/characters/<int:id>', methods=['PUT'])
+def update_character(id):
+    character = Character.query.get(id)
+    if not character:
+        return jsonify({"error": "Personaje no encontrado"}), 404
+    
+    data = request.get_json()
+    character.name = data.get("name", character.name)
+    character.image = data.get("image", character.image)
+    character.species = data.get("species", character.species)
+    character.status = data.get("status", character.status)
+    character.gender = data.get("gender", character.gender)
+
+    try:
+        db.session.commit()
+        return jsonify(character.serialize()), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
+# Ruta para eliminar un personaje (DELETE)
+@api.route('/characters/<int:id>', methods=['DELETE'])
+def delete_character(id):
+    character = Character.query.get(id)
+    if not character:
+        return jsonify({"error": "Personaje no encontrado"}), 404
+    
+    try:
+        db.session.delete(character)
+        db.session.commit()
+        return jsonify({'message': 'Personaje eliminado'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
 # RUTA DE INICIO DE SESIÓN
 @api.route('/login', methods=['POST'])
 def login():
-    email = request.json.get("email",None)
+    email = request.json.get("email", None)
     password = request.json.get("password", None)
-    user = User.query.filter_by(email = email).first()
-    if user is None :
+    user = User.query.filter_by(email=email).first()
+    if user is None:
         return jsonify({'message': "email incorrecto"}), 401
     if password != user.password:
         return jsonify({'message': "contraseña incorrecta"}), 401
@@ -103,20 +171,20 @@ def login():
 @api.route('/signup', methods=['POST'])
 def signup():
     body = request.get_json()
-    user = User.query.filter_by(email = body["email"]).first()
+    user = User.query.filter_by(email=body["email"]).first()
     if user is None: 
-        user = User (email=body["email"],password=body["password"], is_active = True)
+        user = User(email=body["email"], password=body["password"], is_active=True)
         db.session.add(user)
         db.session.commit()
-        return jsonify({'message': "ususario creado"}), 200
+        return jsonify({'message': "usuario creado"}), 200
     else:
-         return jsonify({'message': "ususario ya existe"}), 401
+        return jsonify({'message': "usuario ya existe"}), 401
 
 
 @api.route('/favorites/<int:user_id>', methods=['GET'])
 def get_favorites(user_id):
     favorites = Favorite.query.filter_by(user_id=user_id).all()
-    return jsonify([{'id': fav.id, 'item_id': fav.item_id, 'item_type': fav.item_type} for fav in favorites])
+    return jsonify([{'id': fav.id, 'item_id': fav.item_id} for fav in favorites])
 
 @api.route('/addfavorite', methods=['POST'])
 def add_favorite():
@@ -124,7 +192,7 @@ def add_favorite():
     character_id = request.json.get("character_id")
 
     if not user_id or not character_id:
-       return jsonify({"message" : "Usuario o personaje no enconntrado"}), 400
+       return jsonify({"message": "Usuario o personaje no encontrado"}), 400
 
     user = User.query.get(user_id)
     character = Character.query.get(character_id)
@@ -132,20 +200,23 @@ def add_favorite():
     if not user or not character:
         return jsonify({"message": "usuario o personaje no encontrado"}), 404
     
-    new_favorite = Favorite(user_id = user_id, item_id = character_id)
+    new_favorite = Favorite(user_id=user_id, item_id=character_id)
 
     try:
         db.session.add(new_favorite)
         db.session.commit()
-        return jsonify({"message":"favorito sañadido correctamente"}), 201
+        return jsonify({"message": "favorito añadido correctamente"}), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"message": f"ocurrió un error:{e}"}), 500
+        return jsonify({"message": f"ocurrió un error: {e}"}), 500
 
 
 @api.route('/favorites/<int:id>', methods=['DELETE'])
 def delete_favorite(id):
     favorite = Favorite.query.get(id)
+    if not favorite:
+        return jsonify({"message": "Favorito no encontrado"}), 404
+    
     db.session.delete(favorite)
     db.session.commit()
     return jsonify({'message': 'Favorito eliminado'})
