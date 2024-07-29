@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
@@ -15,13 +15,17 @@ import Login from "./component/LogIn";
 import MainPage from "./component/MainPage";
 import Characters from "./pages/Characters";
 import ProtectedRoute from "./component/ProtectedRoute";
+import SearchBar from "./component/SearchBar"; // Importar SearchBar
 
-
-//create your first component
 const Layout = () => {
-    //the basename is used when your project is published in a subdirectory and not in the root of the domain
-    // you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
     const basename = process.env.BASENAME || "";
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+        console.log('Search query:', query);
+        // Aquí puedes manejar la lógica de búsqueda, por ejemplo, actualizar el estado o realizar una llamada a la API.
+    };
 
     if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
 
@@ -30,24 +34,23 @@ const Layout = () => {
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
                     <Navbar />
+                    <SearchBar onSearch={handleSearch} /> {/* Agregar la barra de búsqueda */}
                     <Routes>
                         <Route element={<MainPage />} path="/" />
-                        <Route element={<videos />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Characters />} path="/character" />
-
                         <Route
                             element={
-                                <ProtectedRoute >
+                                <ProtectedRoute>
                                     <Characters />
                                 </ProtectedRoute>
                             }
-                         
-                            />
+                            path="/protected"
+                        />
                     </Routes>
                     <Footer />
                 </ScrollToTop>
