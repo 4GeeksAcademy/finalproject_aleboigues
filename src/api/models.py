@@ -37,7 +37,7 @@ class Favorite(db.Model):
 class Character(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200), unique=False, nullable=False)
-    image = db.Column(db.String(200), unique=False, nullable=False)
+    image = db.Column(db.String(250), unique=False, nullable=False)
     species = db.Column(db.String(120), unique=False, nullable=False)
     status = db.Column(db.String(80), unique=False, nullable=False)
     gender = db.Column(db.String(80), unique=False, nullable=False)
@@ -47,7 +47,7 @@ class Character(db.Model):
 
     def serialize(self):
         return {
-            "id": self.id,
+            #"id": self.id,
             "name": self.name,
             "image": self.image,
             "species": self.species,

@@ -36,6 +36,23 @@ const CharacterManager = ({ onCharacterUpdate }) => {
         }
     };
 
+    const eliminarPersonaje = async (characterId) => {
+        const response = await fetch(process.env.BACKEND_URL + `/api/characters/${characterId}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('token')}` // Incluye el token si es necesario
+            }
+        });
+
+        if (response.ok) {
+            alert('Personaje eliminado');
+            // Actualiza la lista de personajes después de eliminar uno
+            setCharacters(characters.filter(char => char.id !== characterId));
+        } else {
+            alert('Error al eliminar el personaje');
+        }
+    };
+
     return (
         <div className="row">
             {characters.map((character, index) => (
@@ -49,6 +66,9 @@ const CharacterManager = ({ onCharacterUpdate }) => {
                             <p className="card-text">Género: {character.gender}</p>
                             <button className="btn btn-success" onClick={() => agregarAFavoritos(character.id)}>
                                 Añadir a Favoritos
+                            </button>
+                            <button className="btn btn-danger" onClick={() => eliminarPersonaje(character.id)}>
+                                Eliminar Personaje
                             </button>
                         </div>
                     </div>

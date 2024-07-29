@@ -47,7 +47,7 @@ def apiexterna():
                 continue
 
             new_character = Character(
-                id=char.get("id"),
+                #id=char.get("id"),
                 name=char.get("name"),
                 image=char.get("image"),
                 species=char.get("species"),
@@ -102,6 +102,23 @@ def create_character():
         return jsonify(new_character.serialize()), 201
     else:
         return jsonify({"msg": "personaje ya existente"}), 404
+    
+
+# Ruta para eliminar un personaje (DELETE)
+@api.route('/characters/<int:id>', methods=['DELETE'])
+def delete_character(id):
+    character = Character.query.get(id)
+    if not character:
+        return jsonify({"error": "Personaje no encontrado"}), 404
+    
+    try:
+        db.session.delete(character)
+        db.session.commit()
+        return jsonify({'message': 'Personaje eliminado'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
 
 
 # Ruta para obtener un personaje por ID (GET)
@@ -131,22 +148,6 @@ def update_character(id):
     try:
         db.session.commit()
         return jsonify(character.serialize()), 200
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
-
-
-# Ruta para eliminar un personaje (DELETE)
-@api.route('/characters/<int:id>', methods=['DELETE'])
-def delete_character(id):
-    character = Character.query.get(id)
-    if not character:
-        return jsonify({"error": "Personaje no encontrado"}), 404
-    
-    try:
-        db.session.delete(character)
-        db.session.commit()
-        return jsonify({'message': 'Personaje eliminado'}), 200
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500

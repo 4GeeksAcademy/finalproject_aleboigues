@@ -1,53 +1,52 @@
-// src/front/js/pages/Characters.js
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "../component/SearchBar"; 
-import CharacterManager from "../component/characterManager"; // Asegúrate de que la ruta sea correcta
+import SearchBar from "../component/SearchBar";
+import CharacterManager from "../component/characterManager";
 
 const Characters = () => {
     const [filteredCharacters, setFilteredCharacters] = useState([]);
-    const [characters, setCharacters] = useState([]); // Nuevo estado para almacenar todos los personajes
-    const [searchQuery, setSearchQuery] = useState(""); 
+    const [searchQuery, setSearchQuery] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
         const token = localStorage.getItem('token') || sessionStorage.getItem('token');
         if (!token) {
             navigate('/home');
-        } else {
-            fetchCharacters(); // Carga los personajes al inicio
         }
     }, [navigate]);
 
-    const fetchCharacters = async () => {
-        const response = await fetch(process.env.BACKEND_URL + "/api/characters");
-        const data = await response.json();
-        setCharacters(data);
-        setFilteredCharacters(data); // Inicialmente, todos los personajes son filtrados
-    };
-
     const handleSearch = (query) => {
         setSearchQuery(query);
-        const filtered = characters.filter(character =>
-            character.name.toLowerCase().includes(query.toLowerCase())
-        );
-        setFilteredCharacters(filtered);
     };
 
-    const handleCharacterUpdate = (updatedCharacters) => {
-        setCharacters(updatedCharacters);
-        const filtered = updatedCharacters.filter(character =>
-            character.name.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-        setFilteredCharacters(filtered);
+    const handleDelete = async (id) => {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        const response = await fetch(`${process.env.BACKEND_URL}/api/characters/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (response.ok) {
+            setFilteredCharacters(filteredCharacters.filter(character => character.id !== id));
+            alert("Personaje eliminado exitosamente");
+        } else {
+            const errorData = await response.json();
+            alert("Error al eliminar personaje: " + errorData.message);
+        }
     };
 
     return (
         <div className="container">
             <h1 className="text-center my-4">Personajes de Rick and Morty</h1>
             <SearchBar onSearch={handleSearch} />
-            <CharacterManager onCharacterUpdate={handleCharacterUpdate} /> {/* Integración del CharacterManager */}
+            <CharacterManager onCharacterUpdate={(characters) => {
+                const filtered = characters.filter(character =>
+                    character.name.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+                setFilteredCharacters(filtered);
+            }} />
             <div className="row">
                 {filteredCharacters.map((character, index) => (
                     <div key={index} className="col-lg-4 col-md-6 mb-4">
@@ -58,7 +57,7 @@ const Characters = () => {
                                 <p className="card-text">Especie: {character.species}</p>
                                 <p className="card-text">Estado: {character.status}</p>
                                 <p className="card-text">Género: {character.gender}</p>
-                                <button className="btn btn-success">Añadir a Favoritos</button>
+                                <button className="btn btn-danger" onClick={() => handleDelete(character.id)}>Eliminar</button>
                             </div>
                         </div>
                     </div>
