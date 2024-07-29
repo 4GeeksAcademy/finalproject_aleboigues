@@ -1,5 +1,3 @@
-// src/front/js/layout.js
-
 import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
@@ -16,6 +14,7 @@ import Signup from "./component/SignUp";
 import Login from "./component/LogIn";
 import MainPage from "./component/MainPage";
 import Characters from "./pages/Characters";
+import CreateCharacter from "./component/CreateCharacter"; // Importa el nuevo componente
 import ProtectedRoute from "./component/ProtectedRoute";
 import SearchBar from "./component/SearchBar";
 
@@ -27,7 +26,7 @@ const Layout = () => {
         setSearchQuery(query);
     };
 
-    if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
+    if (!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />;
 
     return (
         <div>
@@ -43,6 +42,7 @@ const Layout = () => {
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Characters searchQuery={searchQuery} />} path="/character" />
+                        <Route element={<CreateCharacter />} path="/create-character" /> {/* Nueva ruta para crear personajes */}
                         <Route
                             element={
                                 <ProtectedRoute>

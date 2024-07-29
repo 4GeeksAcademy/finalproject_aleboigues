@@ -1,0 +1,29 @@
+
+h1 {
+    color: #32CD32; /* Color verde claro para el título */
+    margin-bottom: 20px;
+    text-align: center; /* Centrar el texto */
+}
+
+.form-group label {
+    color: #32CD32; /* Color verde claro para las etiquetas */
+}
+
+.form-control {
+    border: 1px solid #32CD32; /* Borde verde claro para los campos de entrada */
+}
+
+.form-control:focus {
+    border-color: #66ff66; /* Color de borde al enfocar el campo */
+    box-shadow: 0 0 5px rgba(50, 205, 50, 0.5); /* Sombra al enfocar el campo */
+}
+
+.btn-primary {
+    background-color: #32CD32; /* Color verde claro para el botón */
+    border-color: #32CD32; /* Asegurar que el borde también sea verde claro */
+}
+
+.btn-primary:hover {
+    background-color: #66ff66; /* Color más claro al pasar el mouse */
+    border-color: #66ff66; /* Borde más claro al pasar el mouse */
+}
