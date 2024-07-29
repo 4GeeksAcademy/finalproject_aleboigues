@@ -87,22 +87,21 @@ def get_characters():
 # Ruta para crear un nuevo personaje (POST)
 @api.route('/characters', methods=['POST'])
 def create_character():
-    data = request.get_json()
+    data = request.json
     new_character = Character(
-        name=data.get("name"),
-        image=data.get("image"),
-        species=data.get("species"),
-        status=data.get("status"),
-        gender=data.get("gender"),
+        name=data["name"],
+        image=data["image"],
+        species=data["species"],
+        status=data["status"],
+        gender=data["gender"],
     )
-
-    try:
+    character_query=Character.query.filter_by(name=data["name"]).first()
+    if character_query is None:
         db.session.add(new_character)
         db.session.commit()
         return jsonify(new_character.serialize()), 201
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
+    else:
+        return jsonify({"msg": "personaje ya existente"}), 404
 
 
 # Ruta para obtener un personaje por ID (GET)

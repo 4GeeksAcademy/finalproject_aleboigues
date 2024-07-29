@@ -14,7 +14,7 @@ const CreateCharacter = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-        const response = await fetch(process.env.BACKEND_URL + "/api/characters", {
+        const response = await fetch(process.env.BACKEND_URL + "api/characters", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
