@@ -146,9 +146,6 @@ const CharacterManager = ({ onCharacterUpdate }) => {
                             <button className="btn btn-success" onClick={() => agregarAFavoritos(character.id)}>
                                 Añadir a Favoritos
                             </button>
-                            <button className="btn btn-warning" onClick={() => manejarEdicion(character)}>
-                                Editar Personaje
-                            </button>
                             <button className="btn btn-danger" onClick={() => eliminarPersonaje(character.id)}>
                                 Eliminar Personaje
                             </button>
