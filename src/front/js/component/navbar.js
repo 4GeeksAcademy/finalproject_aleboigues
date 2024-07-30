@@ -34,9 +34,7 @@ export const Navbar = () => {
                         </>
                     ) : (
                         <>
-                            <Link to="/create-character">
-                                <button className="btn btn-primary m-2">Crear Personaje</button>
-                            </Link>
+                            
                             <button onClick={logout} className="btn btn-primary">Log Out</button>
                         </>
                     )}

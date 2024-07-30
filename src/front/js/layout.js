@@ -14,7 +14,6 @@ import Signup from "./component/SignUp";
 import Login from "./component/LogIn";
 import MainPage from "./component/MainPage";
 import Characters from "./pages/Characters";
-import CreateCharacter from "./component/CreateCharacter"; // Importa el nuevo componente
 import ProtectedRoute from "./component/ProtectedRoute";
 
 
@@ -41,7 +40,6 @@ const Layout = () => {
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Characters searchQuery={searchQuery} />} path="/character" />
-                        <Route element={<CreateCharacter />} path="/create-character" /> {/* Nueva ruta para crear personajes */}
                         <Route
                             element={
                                 <ProtectedRoute>

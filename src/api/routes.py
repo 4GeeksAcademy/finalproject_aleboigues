@@ -84,24 +84,7 @@ def get_characters():
         return jsonify({"error": str(e)}), 500
 
 
-# Ruta para crear un nuevo personaje (POST)
-@api.route('/characters', methods=['POST'])
-def create_character():
-    data = request.json
-    new_character = Character(
-        name=data["name"],
-        image=data["image"],
-        species=data["species"],
-        status=data["status"],
-        gender=data["gender"],
-    )
-    character_query=Character.query.filter_by(name=data["name"]).first()
-    if character_query is None:
-        db.session.add(new_character)
-        db.session.commit()
-        return jsonify(new_character.serialize()), 201
-    else:
-        return jsonify({"msg": "personaje ya existente"}), 404
+
     
 
 # Ruta para eliminar un personaje (DELETE)
