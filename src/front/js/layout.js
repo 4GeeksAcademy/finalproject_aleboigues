@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
 import { BackendURL } from "./component/backendURL";
 
-import { Home } from "./pages/home";
+import { Home } from "./pages/home"; // Asegúrate de que este es el correcto
 import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
@@ -15,7 +15,8 @@ import Login from "./component/LogIn";
 import MainPage from "./component/MainPage";
 import Characters from "./pages/Characters";
 import ProtectedRoute from "./component/ProtectedRoute";
-
+import UserProfile from "./component/UserProfile";
+import Favorites from "./component/Favorites"; // Asegúrate de importar el componente Favorites
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -40,6 +41,8 @@ const Layout = () => {
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Characters searchQuery={searchQuery} />} path="/character" />
+                        <Route element={<UserProfile />} path="/user-profile" /> {/* Ruta para el perfil de usuario */}
+                        <Route element={<Favorites />} path="/favorites" /> {/* Ruta para favoritos */}
                         <Route
                             element={
                                 <ProtectedRoute>

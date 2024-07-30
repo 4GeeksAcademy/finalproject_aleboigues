@@ -29,12 +29,17 @@ export const Navbar = () => {
                                 <button className="btn btn-primary m-2">Sign Up</button>
                             </Link>
                             <Link to="/login">
-                                <button className="btn btn-primary  m-2">Log In</button>
+                                <button className="btn btn-primary m-2">Log In</button>
                             </Link>
                         </>
                     ) : (
                         <>
-                            
+                            <Link to="/user-profile">
+                                <button className="btn btn-secondary m-2">Profile</button>
+                            </Link>
+                            <Link to="/favorites">
+                                <button className="btn btn-secondary m-2">Favorites</button>
+                            </Link>
                             <button onClick={logout} className="btn btn-primary">Log Out</button>
                         </>
                     )}
