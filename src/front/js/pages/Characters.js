@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "../component/SearchBar";
 import CharacterManager from "../component/characterManager";
 
 const Characters = () => {
@@ -40,7 +39,6 @@ const Characters = () => {
     return (
         <div className="container">
             <h1 className="text-center my-4">Personajes de Rick and Morty</h1>
-            <SearchBar onSearch={handleSearch} />
             <CharacterManager onCharacterUpdate={(characters) => {
                 const filtered = characters.filter(character =>
                     character.name.toLowerCase().includes(searchQuery.toLowerCase())

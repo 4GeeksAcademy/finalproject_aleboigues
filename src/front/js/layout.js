@@ -16,7 +16,7 @@ import MainPage from "./component/MainPage";
 import Characters from "./pages/Characters";
 import CreateCharacter from "./component/CreateCharacter"; // Importa el nuevo componente
 import ProtectedRoute from "./component/ProtectedRoute";
-import SearchBar from "./component/SearchBar";
+
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
