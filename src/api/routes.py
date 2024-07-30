@@ -1,15 +1,14 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
-from flask import Flask, request, jsonify, url_for, Blueprint
+from flask import Flask, request, jsonify, Blueprint
 from api.models import db, User, Character, Favorite
-from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
-
-from flask_jwt_extended import create_access_token
-from flask_jwt_extended import get_jwt_identity
-from flask_jwt_extended import jwt_required
-from flask_jwt_extended import JWTManager
+from flask_jwt_extended import (
+    create_access_token, 
+    jwt_required, 
+    get_jwt_identity
+)
 
 import requests
 
@@ -36,7 +35,7 @@ def apiexterna():
         response = requests.get(url)
 
         if response.status_code != 200:
-            return jsonify({"error": "fallo con la api externa"}), 500
+            return jsonify({"error": "Error con la API externa"}), 500
 
         data = response.json()
         characters = data.get("results", [])
@@ -47,7 +46,6 @@ def apiexterna():
                 continue
 
             new_character = Character(
-                #id=char.get("id"),
                 name=char.get("name"),
                 image=char.get("image"),
                 species=char.get("species"),
@@ -84,11 +82,9 @@ def get_characters():
         return jsonify({"error": str(e)}), 500
 
 
-
-    
-
 # Ruta para eliminar un personaje (DELETE)
 @api.route('/characters/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_character(id):
     character = Character.query.get(id)
     if not character:
@@ -103,7 +99,6 @@ def delete_character(id):
         return jsonify({"error": str(e)}), 500
 
 
-
 # Ruta para obtener un personaje por ID (GET)
 @api.route('/characters/<int:id>', methods=['GET'])
 def get_character(id):
@@ -116,6 +111,7 @@ def get_character(id):
 
 # Ruta para actualizar un personaje (PUT)
 @api.route('/characters/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_character(id):
     character = Character.query.get(id)
     if not character:
@@ -135,7 +131,6 @@ def update_character(id):
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-
 # RUTA DE INICIO DE SESIÓN
 @api.route('/login', methods=['POST'])
 def login():
@@ -143,10 +138,10 @@ def login():
     password = request.json.get("password", None)
     user = User.query.filter_by(email=email).first()
     if user is None:
-        return jsonify({'message': "email incorrecto"}), 401
+        return jsonify({'message': "Email incorrecto"}), 401
     if password != user.password:
-        return jsonify({'message': "contraseña incorrecta"}), 401
-    access_token = create_access_token(identity=email)
+        return jsonify({'message': "Contraseña incorrecta"}), 401
+    access_token = create_access_token(identity=user.id)  # Incluye el user_id en el token JWT
     return jsonify(access_token=access_token)
 
 
@@ -159,20 +154,27 @@ def signup():
         user = User(email=body["email"], password=body["password"], is_active=True)
         db.session.add(user)
         db.session.commit()
-        return jsonify({'message': "usuario creado"}), 200
+        return jsonify({'message': "Usuario creado"}), 200
     else:
-        return jsonify({'message': "usuario ya existe"}), 401
+        return jsonify({'message': "El usuario ya existe"}), 401
 
 
+# Ruta para obtener favoritos
 @api.route('/favorites/<int:user_id>', methods=['GET'])
+@jwt_required()
 def get_favorites(user_id):
     favorites = Favorite.query.filter_by(user_id=user_id).all()
-    return jsonify([{'id': fav.id, 'item_id': fav.item_id} for fav in favorites])
+    return jsonify([{'id': fav.id, 'item_id': fav.item_id} for fav in favorites]), 200
 
+
+# Ruta para añadir a favoritos
 @api.route('/addfavorite', methods=['POST'])
+@jwt_required()
 def add_favorite():
-    user_id = request.json.get("user_id")
+    user_id = get_jwt_identity()  # Obtén el user_id del token JWT
     character_id = request.json.get("character_id")
+
+    print(f"user_id from JWT: {user_id}")  # Agrega este punto de registro para verificar el user_id
 
     if not user_id or not character_id:
        return jsonify({"message": "Usuario o personaje no encontrado"}), 400
@@ -181,28 +183,35 @@ def add_favorite():
     character = Character.query.get(character_id)
 
     if not user or not character:
-        return jsonify({"message": "usuario o personaje no encontrado"}), 404
+        return jsonify({"message": "Usuario o personaje no encontrado"}), 404
     
     new_favorite = Favorite(user_id=user_id, item_id=character_id)
 
     try:
         db.session.add(new_favorite)
         db.session.commit()
-        return jsonify({"message": "favorito añadido correctamente"}), 201
+        return jsonify({"message": "Favorito añadido correctamente"}), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"message": f"ocurrió un error: {e}"}), 500
+        return jsonify({"message": f"Ocurrió un error: {e}"}), 500
 
 
+
+# Ruta para eliminar un favorito
 @api.route('/favorites/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_favorite(id):
     favorite = Favorite.query.get(id)
     if not favorite:
         return jsonify({"message": "Favorito no encontrado"}), 404
     
-    db.session.delete(favorite)
-    db.session.commit()
-    return jsonify({'message': 'Favorito eliminado'})
+    try:
+        db.session.delete(favorite)
+        db.session.commit()
+        return jsonify({'message': 'Favorito eliminado'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
