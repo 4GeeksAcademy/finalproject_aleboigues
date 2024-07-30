@@ -33,7 +33,6 @@ const Layout = () => {
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
                     <Navbar />
-                    <SearchBar onSearch={handleSearch} />
                     <Routes>
                         <Route element={<MainPage />} path="/" />
                         <Route element={<Demo />} path="/demo" />

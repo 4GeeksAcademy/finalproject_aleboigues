@@ -19,12 +19,17 @@ const CharacterManager = ({ onCharacterUpdate }) => {
     }
 
     const agregarAFavoritos = async (characterId) => {
-        const userId = localStorage.getItem('user_id'); // Asegúrate de guardar el user_id al iniciar sesión
+        const userId = localStorage.getItem('user_id');
+        if (!userId) {
+            alert('Debes iniciar sesión para agregar personajes a favoritos');
+            return;
+        }
+
         const response = await fetch(process.env.BACKEND_URL + "/api/addfavorite", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem('token')}` // Incluye el token si es necesario
+                "Authorization": `Bearer ${localStorage.getItem('token')}`
             },
             body: JSON.stringify({ user_id: userId, character_id: characterId })
         });
@@ -32,7 +37,8 @@ const CharacterManager = ({ onCharacterUpdate }) => {
         if (response.ok) {
             alert('Personaje añadido a favoritos');
         } else {
-            alert('Error al añadir el personaje a favoritos');
+            const errorData = await response.json();
+            alert(`Error al añadir el personaje a favoritos: ${errorData.message || 'Error desconocido'}`);
         }
     };
 
@@ -40,13 +46,12 @@ const CharacterManager = ({ onCharacterUpdate }) => {
         const response = await fetch(process.env.BACKEND_URL + `/api/characters/${characterId}`, {
             method: "DELETE",
             headers: {
-                "Authorization": `Bearer ${localStorage.getItem('token')}` // Incluye el token si es necesario
+                "Authorization": `Bearer ${localStorage.getItem('token')}`
             }
         });
 
         if (response.ok) {
             alert('Personaje eliminado');
-            // Actualiza la lista de personajes después de eliminar uno
             setCharacters(characters.filter(char => char.id !== characterId));
         } else {
             alert('Error al eliminar el personaje');
