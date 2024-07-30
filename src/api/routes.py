@@ -5,11 +5,10 @@ from flask import Flask, request, jsonify, Blueprint
 from api.models import db, User, Character, Favorite
 from flask_cors import CORS
 from flask_jwt_extended import (
-    create_access_token, 
-    jwt_required, 
+    create_access_token,
+    jwt_required,
     get_jwt_identity
 )
-
 import requests
 
 api = Blueprint('api', __name__)
@@ -17,7 +16,7 @@ api = Blueprint('api', __name__)
 # Allow CORS requests to this API
 CORS(api)
 
-# Ruta que nos trae los datos de la API
+# Ruta que nos trae los datos de la API externa
 @api.route('/apiexterna', methods=['POST'])
 def apiexterna():
     urls = [
@@ -33,7 +32,6 @@ def apiexterna():
 
     for url in urls:
         response = requests.get(url)
-
         if response.status_code != 200:
             return jsonify({"error": "Error con la API externa"}), 500
 
@@ -71,7 +69,6 @@ def apiexterna():
         "errors": errors
     }), 201
 
-
 # Ruta para obtener todos los personajes (GET)
 @api.route('/characters', methods=['GET'])
 def get_characters():
@@ -81,7 +78,6 @@ def get_characters():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
 # Ruta para eliminar un personaje (DELETE)
 @api.route('/characters/<int:id>', methods=['DELETE'])
 @jwt_required()
@@ -89,7 +85,7 @@ def delete_character(id):
     character = Character.query.get(id)
     if not character:
         return jsonify({"error": "Personaje no encontrado"}), 404
-    
+
     try:
         db.session.delete(character)
         db.session.commit()
@@ -97,7 +93,6 @@ def delete_character(id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
-
 
 # Ruta para obtener un personaje por ID (GET)
 @api.route('/characters/<int:id>', methods=['GET'])
@@ -108,7 +103,6 @@ def get_character(id):
     else:
         return jsonify({"error": "Personaje no encontrado"}), 404
 
-
 # Ruta para actualizar un personaje (PUT)
 @api.route('/characters/<int:id>', methods=['PUT'])
 @jwt_required()
@@ -116,7 +110,7 @@ def update_character(id):
     character = Character.query.get(id)
     if not character:
         return jsonify({"error": "Personaje no encontrado"}), 404
-    
+
     data = request.get_json()
     character.name = data.get("name", character.name)
     character.image = data.get("image", character.image)
@@ -131,7 +125,7 @@ def update_character(id):
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
 
-# RUTA DE INICIO DE SESIÓN
+# Ruta de inicio de sesión
 @api.route('/login', methods=['POST'])
 def login():
     email = request.json.get("email", None)
@@ -141,23 +135,22 @@ def login():
         return jsonify({'message': "Email incorrecto"}), 401
     if password != user.password:
         return jsonify({'message': "Contraseña incorrecta"}), 401
+
     access_token = create_access_token(identity=user.id)  # Incluye el user_id en el token JWT
     return jsonify(access_token=access_token)
 
-
-# RUTA DE REGISTRO
+# Ruta de registro
 @api.route('/signup', methods=['POST'])
 def signup():
     body = request.get_json()
     user = User.query.filter_by(email=body["email"]).first()
-    if user is None: 
+    if user is None:
         user = User(email=body["email"], password=body["password"], is_active=True)
         db.session.add(user)
         db.session.commit()
         return jsonify({'message': "Usuario creado"}), 200
     else:
-        return jsonify({'message': "El usuario ya existe"}), 401
-
+        return jsonify({'message': "El usuario ya existe"}), 400
 
 # Ruta para obtener favoritos
 @api.route('/favorites/<int:user_id>', methods=['GET'])
@@ -166,7 +159,6 @@ def get_favorites(user_id):
     favorites = Favorite.query.filter_by(user_id=user_id).all()
     return jsonify([{'id': fav.id, 'item_id': fav.item_id} for fav in favorites]), 200
 
-
 # Ruta para añadir a favoritos
 @api.route('/addfavorite', methods=['POST'])
 @jwt_required()
@@ -174,17 +166,17 @@ def add_favorite():
     user_id = get_jwt_identity()  # Obtén el user_id del token JWT
     character_id = request.json.get("character_id")
 
-    print(f"user_id from JWT: {user_id}")  # Agrega este punto de registro para verificar el user_id
+    print(f"user_id from JWT: {user_id}")  # Verifica el user_id
 
     if not user_id or not character_id:
-       return jsonify({"message": "Usuario o personaje no encontrado"}), 400
+        return jsonify({"message": "Usuario o personaje no encontrado"}), 400
 
     user = User.query.get(user_id)
     character = Character.query.get(character_id)
 
     if not user or not character:
         return jsonify({"message": "Usuario o personaje no encontrado"}), 404
-    
+
     new_favorite = Favorite(user_id=user_id, item_id=character_id)
 
     try:
@@ -195,8 +187,6 @@ def add_favorite():
         db.session.rollback()
         return jsonify({"message": f"Ocurrió un error: {e}"}), 500
 
-
-
 # Ruta para eliminar un favorito
 @api.route('/favorites/<int:id>', methods=['DELETE'])
 @jwt_required()
@@ -204,7 +194,7 @@ def delete_favorite(id):
     favorite = Favorite.query.get(id)
     if not favorite:
         return jsonify({"message": "Favorito no encontrado"}), 404
-    
+
     try:
         db.session.delete(favorite)
         db.session.commit()
