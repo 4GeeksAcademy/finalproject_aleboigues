@@ -34,9 +34,7 @@ export const Navbar = () => {
                         </>
                     ) : (
                         <>
-                            <Link to="/profile">
-                                <button className="btn btn-primary m-2">Profile</button>
-                            </Link>
+                           
                             <button onClick={logout} className="btn btn-primary">Log Out</button>
                         </>
                     )}

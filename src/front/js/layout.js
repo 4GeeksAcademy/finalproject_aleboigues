@@ -16,7 +16,7 @@ import Login from "./component/LogIn";
 import MainPage from "./component/MainPage";
 import Characters from "./pages/Characters";
 import ProtectedRoute from "./component/ProtectedRoute";
-import UserProfile from "./component/UserProfile";
+
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -41,7 +41,6 @@ const Layout = () => {
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Characters searchQuery={searchQuery} />} path="/character" />
-                        <Route element={<UserProfile />} path="/profile" />
                         <Route
                             element={
                                 <ProtectedRoute>
