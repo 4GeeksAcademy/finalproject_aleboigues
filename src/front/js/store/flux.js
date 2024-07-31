@@ -1,74 +1,30 @@
+// src/front/js/flux.js
+
 const getState = ({ getStore, getActions, setStore }) => {
     return {
         store: {
-            message: null,
-            demo: [
-                {
-                    title: "FIRST",
-                    background: "white",
-                    initial: "white"
-                },
-                {
-                    title: "SECOND",
-                    background: "white",
-                    initial: "white"
-                }
-            ]
+            characters: [],
+            favorites: [] // Para almacenar los personajes favoritos
         },
         actions: {
-            
-            exampleFunction: () => {
-                getActions().changeColor(0, "green");
+            getMessage: () => {
+                // Aquí puedes definir la lógica para obtener un mensaje
             },
-
-            getMessage: async () => {
-                try{
-                  
-                    const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
-                    const data = await resp.json()
-                    setStore({ message: data.message })
-                  
-                    return data;
-                }catch(error){
-                    console.log("Error loading message from backend", error)
-                }
+            createApiCharacters: async () => {
+                const response = await fetch(`${process.env.BACKEND_URL}/api/characters`);
+                const data = await response.json();
+                setStore({ characters: data }); // Guarda los personajes en el estado
             },
-
-            createApiCharacters: () => {
-                fetch(process.env.BACKEND_URL + "/api/apiexterna", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({})
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Datos almacenados:', data.stored_characters);
-                    console.log('Errores:', data.errors);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            },
-
-            changeColor: (index, color) => {
-              
+            favorito: (name) => {
                 const store = getStore();
-
-        
-                const demo = store.demo.map((elm, i) => {
-                    if (i === index) elm.background = color;
-                    return elm;
-                });
-
-                //reset the global store
-                setStore({ demo: demo });
+                const favorites = store.favorites.includes(name)
+                    ? store.favorites.filter(fav => fav !== name)
+                    : [...store.favorites, name];
+                setStore({ favorites });
+            },
+            colorBoton: (name) => {
+                const store = getStore();
+                return store.favorites.includes(name);
             }
         }
     };

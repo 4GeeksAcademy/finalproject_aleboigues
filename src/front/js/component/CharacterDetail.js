@@ -1,34 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+// src/front/js/component/CharacterDetail.js
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-const ElementDetail = () => {
-    const { id } = useParams(); 
-    const [element, setElement] = useState(null);
+const CharacterDetail = () => {
+    const { id } = useParams();
+    const [character, setCharacter] = useState(null);
 
     useEffect(() => {
-        const fetchElementDetail = async () => {
-            const response = await fetch(`${process.env.BACKEND_URL}/api/characters/${id}`); 
+        // Fetch character details from backend
+        const fetchCharacter = async () => {
+            const response = await fetch(`${process.env.BACKEND_URL}/api/characters/${id}`);
             const data = await response.json();
-            setElement(data);
+            setCharacter(data);
         };
 
-        fetchElementDetail();
+        fetchCharacter();
     }, [id]);
 
-    if (!element) {
-        return <div>Cargando...</div>;
+    if (!character) {
+        return <div>Loading...</div>;
     }
 
     return (
         <div className="container">
-            <h1>{element.name}</h1>
-            <img src={element.image} alt={element.name} />
-            <p>Especie: {element.species}</p>
-            <p>Estado: {element.status}</p>
-            <p>Género: {element.gender}</p>
-           
+            <div className="row justify-content-center">
+                <div className="col-4">
+                    <img className="img-fluid" src={character.image} alt={character.name} />
+                </div>
+                <div className="col-4 informacionPersonaje">
+                    <h2 className="text-center">{character.name}</h2>
+                    <p className="text-center">{character.description}</p>
+                </div>
+                <div className="row justify-content-center">
+                    <div className="col-10 tablainfo">
+                        <table className="table tablaPersonaje text-danger">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Especie</th>
+                                    <th scope="col">Estado</th>
+                                    <th scope="col">Género</th>
+                                    <th scope="col">Origen</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{character.name}</td>
+                                    <td>{character.species}</td>
+                                    <td>{character.status}</td>
+                                    <td>{character.gender}</td>
+                                    <td>{character.origin.name}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };
 
-export default ElementDetail;
+export default CharacterDetail;
