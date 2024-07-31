@@ -4,14 +4,14 @@ const AddFavoriteButton = ({ characterId, token }) => {
     const [responseMessage, setResponseMessage] = useState('');
 
     const addFavorite = () => {
-        fetch(`${process.env.BACKEND_URL}/api/addfavorite`, { // Asegúrate de que la URL de tu API es correcta
+        fetch(`${process.env.BACKEND_URL}/api/addfavorite`, { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`  // Incluye el token JWT en la cabecera
+                'Authorization': `Bearer ${token}`  
             },
             body: JSON.stringify({
-                character_id: characterId  // ID del personaje que quieres agregar a favoritos
+                character_id: characterId  
             })
         })
         .then(response => response.json())

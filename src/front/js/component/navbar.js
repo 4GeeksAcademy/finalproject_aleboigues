@@ -1,3 +1,4 @@
+// src/front/js/component/navbar.js
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../img/rick-and-morty-31015.png"; 
@@ -13,7 +14,6 @@ export const Navbar = () => {
         navigate("/home");
     }
 
-    // Verifica si el usuario está autenticado
     const isAuthenticated = localStorage.getItem('token') || sessionStorage.getItem('token');
 
     return (
@@ -29,16 +29,13 @@ export const Navbar = () => {
                                 <button className="btn btn-primary m-2">Sign Up</button>
                             </Link>
                             <Link to="/login">
-                                <button className="btn btn-primary m-2">Log In</button>
+                                <button className="btn btn-primary  m-2">Log In</button>
                             </Link>
                         </>
                     ) : (
                         <>
-                            <Link to="/user-profile">
-                                <button className="btn btn-secondary m-2">Profile</button>
-                            </Link>
-                            <Link to="/favorites">
-                                <button className="btn btn-secondary m-2">Favorites</button>
+                            <Link to="/profile">
+                                <button className="btn btn-primary m-2">Profile</button>
                             </Link>
                             <button onClick={logout} className="btn btn-primary">Log Out</button>
                         </>

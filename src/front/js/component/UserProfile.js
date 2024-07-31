@@ -1,3 +1,4 @@
+// src/front/js/component/UserProfile.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,11 +9,11 @@ const UserProfile = () => {
     email: '',
     password: '',
   });
-  const navigate = useNavigate(); // Cambia useHistory a useNavigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem('token'); // Asegúrate de almacenar el token después del login
+      const token = localStorage.getItem('token');
       const response = await fetch('https://your-api-url.com/user/profile', {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -50,8 +51,8 @@ const UserProfile = () => {
     e.preventDefault();
     const token = localStorage.getItem('token');
 
-    const response = await fetch('https://your-api-url.com/user/profile', {
-      method: 'PUT',
+    const response = await fetch('https://glorious-invention-64pp4r9wqvgfr545-3000.app.github.dev/profile', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -69,7 +70,7 @@ const UserProfile = () => {
   };
 
   if (!user) {
-    return <div>Cargando...</div>; // Muestra un mensaje de carga mientras obtienes los datos
+    return <div>Cargando...</div>;
   }
 
   return (
