@@ -23,7 +23,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         return response.json();
                     })
                     .then(data => {
-                        console.log('Datos almacenados:', data.stored_character);
+                        console.log('Datos almacenados:', data.stored_characters);
                         console.log('Errores:', data.errors);
                     })
                     .catch(error => {

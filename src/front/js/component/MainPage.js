@@ -6,7 +6,7 @@ const MainPage = () => {
     const navigate = useNavigate();
 
     const goToCharacters = () => {
-        navigate('/characters');
+        navigate('/character');
     };
 
     return (
