@@ -1,4 +1,3 @@
-// src/front/js/layout.js
 import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
@@ -16,7 +15,7 @@ import Login from "./component/LogIn";
 import MainPage from "./component/MainPage";
 import Characters from "./pages/Characters";
 import ProtectedRoute from "./component/ProtectedRoute";
-
+import CharacterDetail from "./component/CharacterDetail.js";
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -32,23 +31,23 @@ const Layout = () => {
         <div>
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
-                    <Navbar />
+                    <Navbar onSearch={handleSearch} />
                     <Routes>
                         <Route element={<MainPage />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
-                        <Route element={<h1>Not found!</h1>} />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Login />} path="/login" />
-                        <Route element={<Characters searchQuery={searchQuery} />} path="/character" />
-                        <Route
+                        <Route element={<Characters searchQuery={searchQuery} />} path="/characters" />
+                        <Route 
                             element={
                                 <ProtectedRoute>
-                                    <Characters searchQuery={searchQuery} />
+                                    <CharacterDetail />
                                 </ProtectedRoute>
                             }
-                            path="/protected"
+                            path="/characterdetail/:characterid" 
                         />
+                        <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>

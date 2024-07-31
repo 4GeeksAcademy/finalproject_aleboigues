@@ -1,7 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "/workspaces/finalproject_aleboigues/src/front/styles/mainpage.css"; 
 
 const MainPage = () => {
+    const navigate = useNavigate();
+
+    const goToCharacters = () => {
+        navigate('/characters');
+    };
+
     return (
         <div className="main-page">
             <video autoPlay loop muted className="video-bg">
@@ -19,13 +26,9 @@ const MainPage = () => {
                         <p className="mt-4">
                             Por favor, regístrate o inicia sesión para acceder a la lista completa de personajes y descubrir más sobre sus aventuras interdimensionales.
                         </p>
-                        {/*  <div className="mt-5">
-                            <img
-                                src='}
-                                alt="Rick and Morty Banner"
-                                className="img-fluid"
-                            />
-                        </div>*/}
+                        <button className="btn btn-primary mt-4" onClick={goToCharacters}>
+                            Ver Personajes
+                        </button>
                     </div>
                 </div>
             </div>

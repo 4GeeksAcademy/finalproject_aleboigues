@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import CharacterManager from "../component/characterManager";
+import { useContext } from "react";
+import { Context } from "../store/appContext";
 
 const Characters = () => {
+    const { actions } = useContext(Context);
     const [characters, setCharacters] = useState([]); // Almacena todos los personajes
     const [filteredCharacters, setFilteredCharacters] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
@@ -70,6 +73,10 @@ const Characters = () => {
                                 <p className="card-text">Especie: {character.species}</p>
                                 <p className="card-text">Estado: {character.status}</p>
                                 <p className="card-text">Género: {character.gender}</p>
+                                <Link to={"/characterdetail/" + index}>
+                                    <button className="btn btn-outline-primary mx-1">Learn More!</button>
+                                </Link>
+                                <button onClick={() => actions.favorito(character.name)} className="btn btn-outline-warning mx-1">Favorito</button>
                                 <button className="btn btn-danger" onClick={() => handleDelete(character.id)}>Eliminar</button>
                             </div>
                         </div>
