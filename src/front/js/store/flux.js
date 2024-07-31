@@ -1,5 +1,3 @@
-// src/front/js/flux.js
-
 const getState = ({ getStore, getActions, setStore }) => {
     return {
         store: {
@@ -10,24 +8,28 @@ const getState = ({ getStore, getActions, setStore }) => {
             getMessage: () => {
                 // Aquí puedes definir la lógica para obtener un mensaje
             },
-            createApiCharacters: async () => {
-                const response = await fetch(`${process.env.BACKEND_URL}/api/characters`);
-                const data = await response.json();
-                setStore({ characters: data }); // Guarda los personajes en el estado
-            },
-            favorito: (name) => {
-                const store = getStore();
-                const favorites = store.favorites.includes(name)
-                    ? store.favorites.filter(fav => fav !== name)
-                    : [...store.favorites, name];
-                setStore({ favorites });
-            },
-            colorBoton: (name) => {
-                const store = getStore();
-                return store.favorites.includes(name);
+            createApiCharacters: () => {
+                fetch(process.env.BACKEND_URL + "/api/apiexterna", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Datos almacenados:', data.stored_character);
+                        console.log('Errores:', data.errors);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             }
         }
     };
-};
-
-export default getState;
+};export default getState;
