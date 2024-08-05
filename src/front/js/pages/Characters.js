@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 import CharacterManager from "../component/characterManager";
+import "/workspaces/finalproject_aleboigues/src/front/styles/styles.css";
 
 const Characters = () => {
     const [filteredCharacters, setFilteredCharacters] = useState([]);
@@ -51,7 +52,7 @@ const Characters = () => {
 
     return (
         <div className="container">
-            <h1 className="text-center my-4">Personajes de Rick y Morty</h1>
+            <h1 className="characterRM text-center my-4">Personajes de Rick y Morty</h1>
             <CharacterManager onCharacterUpdate={handleSearch} />
             <div className="row">
                 {filteredCharacters.map((character) => (

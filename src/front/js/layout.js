@@ -1,4 +1,3 @@
-// src/front/js/layout.js
 import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ScrollToTop from "./component/scrollToTop";
@@ -15,6 +14,7 @@ import Signup from "./component/SignUp";
 import Login from "./component/LogIn";
 import MainPage from "./component/MainPage";
 import Characters from "./pages/Characters";
+import Favorites from "./component/Favorites"; // Asegúrate de importar el componente aquí
 import ProtectedRoute from "./component/ProtectedRoute";
 import CharacterDetail from "./component/CharacterDetail";
 import characterManager from "./component/characterManager";
@@ -41,8 +41,9 @@ const Layout = () => {
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Characters searchQuery={searchQuery} />} path="/character" />
-						<Route path="/characterdetail/:characterid" element={<CharacterDetail />} />                        <Route element={<characterManager />} path="/charactermanager" />
-
+                        <Route element={<Favorites />} path="/favorites" /> {/* Añade esta línea para la ruta de Favoritos */}
+                        <Route path="/characterdetail/:characterid" element={<CharacterDetail />} />
+                        <Route element={<characterManager />} path="/charactermanager" />
                         <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>
                     <Footer />
