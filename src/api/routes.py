@@ -163,29 +163,27 @@ def get_favorites(user_id):
 @api.route('/addfavorite', methods=['POST'])
 @jwt_required()
 def add_favorite():
-    user_id = get_jwt_identity()  # Obtén el user_id del token JWT
-    character_id = request.json.get("character_id")
+    user_id = get_jwt_identity() 
+    data = request.get_json()
+    item_id = data.get('item_id')  
 
-    print(f"user_id from JWT: {user_id}")  # Verifica el user_id
+    character = Character.query.get(item_id)
+    if not character:
+        return jsonify({"message": "Personaje no encontrado"}), 404
 
-    if not user_id or not character_id:
-        return jsonify({"message": "Usuario o personaje no encontrado"}), 400
+    existing_favorite = Favorite.query.filter_by(user_id=user_id, item_id=item_id).first()
+    if existing_favorite:
+        return jsonify({"message": "El personaje ya está en tus favoritos"}), 400
 
-    user = User.query.get(user_id)
-    character = Character.query.get(character_id)
-
-    if not user or not character:
-        return jsonify({"message": "Usuario o personaje no encontrado"}), 404
-
-    new_favorite = Favorite(user_id=user_id, item_id=character_id)
+    new_favorite = Favorite(user_id=user_id, item_id=item_id)
+    db.session.add(new_favorite)
 
     try:
-        db.session.add(new_favorite)
         db.session.commit()
-        return jsonify({"message": "Favorito añadido correctamente"}), 201
+        return jsonify({"message": "Personaje añadido a favoritos"}), 201
     except Exception as e:
         db.session.rollback()
-        return jsonify({"message": f"Ocurrió un error: {e}"}), 500
+        return jsonify({"error": str(e)}), 500
 
 # Ruta para eliminar un favorito
 @api.route('/favorites/<int:id>', methods=['DELETE'])

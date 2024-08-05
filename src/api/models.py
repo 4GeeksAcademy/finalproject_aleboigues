@@ -21,10 +21,14 @@ class User(db.Model):
         }
 
 class Favorite(db.Model):
-    __tablename__ = 'favorite'  # Nombre de la tabla
+    __tablename__ = 'favorite'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Referencia a User
-    item_id = db.Column(db.Integer, db.ForeignKey('character.id'), nullable=False)  # Referencia a Character
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    item_id = db.Column(db.Integer, db.ForeignKey('character.id'), nullable=False)
+
+    user = db.relationship('User', backref=db.backref('favorites', lazy=True))
+
+    character = db.relationship('Character', backref=db.backref('favorites', lazy=True))
 
     def __repr__(self):
         return f'<Favorite user_id={self.user_id} item_id={self.item_id}>'
@@ -33,8 +37,8 @@ class Favorite(db.Model):
         """Método para serializar el objeto Favorite."""
         return {
             'id': self.id,
-            'user_id': self.user_id,
-            'item_id': self.item_id,
+            'user': self.user.serialize(),  
+            'character': self.character.serialize()  
         }
 
 class Character(db.Model):

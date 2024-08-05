@@ -6,7 +6,7 @@ import CharacterManager from "../component/characterManager";
 const Characters = () => {
     const [filteredCharacters, setFilteredCharacters] = useState([]);
     const navigate = useNavigate();
-    const { store, actions } = useContext(Context); // Asegúrate de usar el contexto
+    const { store, actions } = useContext(Context); 
 
     useEffect(() => {
         const token = localStorage.getItem('token') || sessionStorage.getItem('token');
