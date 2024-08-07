@@ -153,9 +153,10 @@ def signup():
         return jsonify({'message': "El usuario ya existe"}), 400
 
 # Ruta para obtener favoritos
-@api.route('/favorites/<int:user_id>', methods=['GET'])
+@api.route('/favorites', methods=['GET'])
 @jwt_required()
-def get_favorites(user_id):
+def get_favorites():
+    user_id = get_jwt_identity() 
     favorites = Favorite.query.filter_by(user_id=user_id).all()
     return jsonify([{'id': fav.id, 'item_id': fav.item_id} for fav in favorites]), 200
 

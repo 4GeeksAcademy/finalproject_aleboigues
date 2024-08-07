@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { Context } from '../store/appContext';
 
 const CharacterManager = ({ onCharacterUpdate }) => {
+    const { store, actions } = useContext(Context);
     const [characters, setCharacters] = useState([]);
     const [editingCharacter, setEditingCharacter] = useState(null);
     const [characterForm, setCharacterForm] = useState({
@@ -10,7 +12,7 @@ const CharacterManager = ({ onCharacterUpdate }) => {
         status: '',
         gender: ''
     });
-    const [searchQuery, setSearchQuery] = useState(""); // Estado para la consulta de búsqueda
+    const [searchQuery, setSearchQuery] = useState("");
     const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
@@ -34,27 +36,13 @@ const CharacterManager = ({ onCharacterUpdate }) => {
     }
 
     const agregarAFavoritos = async (characterId) => {
-        const userId = localStorage.getItem('user_id');
-        if (!userId) {
-            alert('Debes iniciar sesión para añadir favoritos');
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('No estás autenticado');
             return;
         }
-
         try {
-            const response = await fetch(process.env.BACKEND_URL + "/api/addfavorite", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify({ user_id: userId, character_id: characterId })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Error al añadir el personaje a favoritos');
-            }
-
+            await actions.addFavorite(characterId, token);
             alert('Personaje añadido a favoritos');
         } catch (error) {
             alert(error.message);
@@ -118,8 +106,7 @@ const CharacterManager = ({ onCharacterUpdate }) => {
         }
     };
 
-    // Filtra los personajes en función de la consulta de búsqueda
-    const filteredCharacters = characters.filter(character => 
+    const filteredCharacters = characters.filter(character =>
         character.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 

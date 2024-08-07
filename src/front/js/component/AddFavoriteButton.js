@@ -1,28 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { Context } from '../store/appContext';
 
-const AddFavoriteButton = ({ characterId, token }) => {
+const AddFavoriteButton = ({ characterId }) => {
+    const { store, actions } = useContext(Context);
     const [responseMessage, setResponseMessage] = useState('');
 
-    const addFavorite = () => {
-        fetch(`${process.env.BACKEND_URL}/api/addfavorite`, { 
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`  
-            },
-            body: JSON.stringify({
-                character_id: characterId  
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            setResponseMessage(data.message);
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            setResponseMessage('Ocurrió un error al agregar a favoritos');
-        });
+    const addFavorite = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setResponseMessage('No estás autenticado');
+            return;
+        }
+        try {
+            const message = await actions.addFavorite(characterId, token);
+            setResponseMessage(message);
+        } catch (error) {
+            setResponseMessage(error.message);
+        }
     };
 
     return (

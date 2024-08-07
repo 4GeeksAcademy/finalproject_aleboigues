@@ -1,22 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { Context } from '../store/appContext';
 
 const Favorites = () => {
+    const { store, actions } = useContext(Context);
     const [favorites, setFavorites] = useState([]);
 
     useEffect(() => {
         const fetchFavorites = async () => {
-            const userId = localStorage.getItem('user_id');
-            const token = localStorage.getItem('token');  // Asegúrate de obtener el token JWT almacenado
-            if (!userId || !token) {
-                console.error("User ID or token is missing");
-                return; // No hacer la llamada si no hay usuario o token
-            }
-            const response = await fetch(`${process.env.BACKEND_URL}/api/favorites/${userId}`, {
+            //const userId = localStorage.getItem('user_id');
+            const token = localStorage.getItem('token');
+            //if (!userId || !token) {
+                //console.error("User ID or token is missing");
+                //return;
+            //}
+            const response = await fetch(`${process.env.BACKEND_URL}/api/favorites`, {
                 headers: {
-                    'Authorization': `Bearer ${token}`  // Incluye el token JWT en la cabecera
+                    'Authorization': `Bearer ${token}`
                 }
             });
-            
+
             if (response.ok) {
                 const data = await response.json();
                 setFavorites(data);
@@ -29,18 +31,11 @@ const Favorites = () => {
     }, []);
 
     const eliminarFavorito = async (favId) => {
-        const token = localStorage.getItem('token');  // Asegúrate de obtener el token JWT almacenado
-        const response = await fetch(`${process.env.BACKEND_URL}/api/favorites/${favId}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`  // Incluye el token JWT en la cabecera
-            }
-        });
-
-        if (response.ok) {
-            setFavorites(favorites.filter(fav => fav.id !== favId));
-        } else {
-            console.error('Error al eliminar el favorito:', response.statusText);
+        const token = localStorage.getItem('token');
+        try {
+            await actions.removeFavorite(favId, token);
+        } catch (error) {
+            console.error('Error al eliminar el favorito:', error.message);
         }
     };
 

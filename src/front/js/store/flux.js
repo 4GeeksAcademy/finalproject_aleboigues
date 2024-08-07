@@ -2,7 +2,7 @@ const getState = ({ getStore, getActions, setStore }) => {
     return {
         store: {
             characters: [],
-            favorites: [] // Para almacenar los personajes favoritos
+            favorites: []
         },
         actions: {
             getMessage: () => {
@@ -29,7 +29,63 @@ const getState = ({ getStore, getActions, setStore }) => {
                     .catch(error => {
                         console.error('Error:', error);
                     });
+            },
+            addFavorite: async (characterId, token) => {
+                console.log(`Adding favorite: characterId=${characterId}, token=${token}`);
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/addfavorite`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({
+                            item_id: characterId
+                        })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error('Error response:', errorData);
+                        throw new Error(errorData.message || 'Error al añadir a favoritos');
+                    }
+
+                    const data = await response.json();
+                    const store = getStore();
+                    setStore({ favorites: [...store.favorites, data.favorite] });
+                    console.log('Favorite added:', data.favorite);
+                    return data.message;
+                } catch (error) {
+                    console.error('Error adding favorite:', error.message);
+                    throw error;
+                }
+            },
+            removeFavorite: async (favId, token) => {
+                console.log(`Removing favorite: favId=${favId}, token=${token}`);
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/favorites/${favId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error('Error response:', errorData);
+                        throw new Error(errorData.message || 'Error al eliminar de favoritos');
+                    }
+
+                    const store = getStore();
+                    setStore({ favorites: store.favorites.filter(fav => fav.id !== favId) });
+                    console.log('Favorite removed:', favId);
+                } catch (error) {
+                    console.error('Error removing favorite:', error.message);
+                    throw error;
+                }
             }
         }
     };
-};export default getState;
+};
+
+export default getState;
