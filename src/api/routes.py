@@ -158,7 +158,7 @@ def signup():
 def get_favorites():
     user_id = get_jwt_identity() 
     favorites = Favorite.query.filter_by(user_id=user_id).all()
-    return jsonify([{'id': fav.id, 'item_id': fav.item_id} for fav in favorites]), 200
+    return jsonify([fav.serialize() for fav in favorites]), 200
 
 # Ruta para añadir a favoritos
 @api.route('/addfavorite', methods=['POST'])

@@ -47,12 +47,12 @@ const Favorites = () => {
                     <p>No tienes personajes favoritos.</p>
                 ) : (
                     favorites.map(fav => (
-                        <div key={fav.id} className="col-lg-4 col-md-6 mb-4">
+                        <div key={fav.character.id} className="col-lg-4 col-md-6 mb-4">
                             <div className="card h-100">
-                                <img src={fav.image} className="card-img-top" alt={fav.name} />
+                                <img src={fav.character.image} className="card-img-top" alt={fav.character.name} />
                                 <div className="card-body">
-                                    <h5 className="card-title">{fav.name}</h5>
-                                    <button className="btn btn-danger" onClick={() => eliminarFavorito(fav.id)}>Eliminar de Favoritos</button>
+                                    <h5 className="card-title">{fav.character.name}</h5>
+                                    <button className="btn btn-danger" onClick={() => eliminarFavorito(fav.character.id)}>Eliminar de Favoritos</button>
                                 </div>
                             </div>
                         </div>
