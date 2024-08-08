@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import "/workspaces/finalproject_aleboigues/src/front/styles/detalle.css";
 
 const Detalle = () => {
     const { detalle} = useParams(); 
@@ -38,7 +39,7 @@ const Detalle = () => {
     }
 
     return (
-        <div>
+        <div className='card'>
             <h1>{character.name}</h1>
             <img src={character.image} alt={character.name} />
             <p>Especie: {character.species}</p>
