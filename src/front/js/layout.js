@@ -18,6 +18,7 @@ import Favorites from "./component/Favorites"; // Asegúrate de importar el comp
 import ProtectedRoute from "./component/ProtectedRoute";
 import CharacterDetail from "./component/CharacterDetail";
 import characterManager from "./component/characterManager";
+import Detalle from "./pages/Detalle";
 
 const Layout = () => {
     const basename = process.env.BASENAME || "";
@@ -44,6 +45,7 @@ const Layout = () => {
                         <Route element={<Favorites />} path="/favorites" /> {/* Añade esta línea para la ruta de Favoritos */}
                         <Route path="/characterdetail/:characterid" element={<CharacterDetail />} />
                         <Route element={<characterManager />} path="/charactermanager" />
+                        <Route element={<Detalle />} path="/detallepersonaje/:detalle" />
                         <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>
                     <Footer />

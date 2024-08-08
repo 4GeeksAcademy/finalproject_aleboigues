@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Context } from '../store/appContext';
+import { Link } from "react-router-dom";
 
 const CharacterManager = ({ onCharacterUpdate }) => {
     const { store, actions } = useContext(Context);
@@ -136,6 +137,14 @@ const CharacterManager = ({ onCharacterUpdate }) => {
                             <button className="btn btn-danger" onClick={() => eliminarPersonaje(character.id)}>
                                 Eliminar Personaje
                             </button>
+                            <Link to={`/detallepersonaje/${character.id}`}>
+                            <button className="btn btn-warning">
+                                Más Información
+                            </button>
+                            </Link>
+
+
+
                         </div>
                     </div>
                 </div>
